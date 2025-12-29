@@ -29,7 +29,7 @@ function Difficulty({
           options={levels}
           selected={difficulty}
           onSelect={setDifficulty}
-          className="max-w-[166.5px] w-full"
+          className="w-[166.5px] md:w-fit"
         />
       </div>
 
