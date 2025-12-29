@@ -26,7 +26,7 @@ function Mode({ mode: propMode, setMode: propSetMode }) {
           options={modes}
           selected={mode}
           onSelect={setMode}
-          className="max-w-[166.5px] w-full"
+          className="w-[166.5px] md:w-fit"
         />
       </div>
 
