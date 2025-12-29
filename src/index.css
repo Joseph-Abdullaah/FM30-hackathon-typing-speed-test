@@ -54,10 +54,8 @@
 }
 
 
-@layer utilities {
-
   /* Text Preset 1 */
-  .text-preset-1 {
+  @utility text-preset-1 {
     font-family: var(--font-sora);
     font-size: var(--text-40);
     line-height: var(--leading-136);
@@ -65,7 +63,7 @@
     font-weight: var(--font-bold);
   }
 
-  .text-preset-1-regular {
+  @utility text-preset-1-regular {
     font-family: var(--font-sora);
     font-size: var(--text-40);
     line-height: var(--leading-136);
@@ -73,7 +71,7 @@
     font-weight: var(--font-regular);
   }
 
-  .text-preset-1-mobile {
+  @utility text-preset-1-mobile {
     font-family: var(--font-sora);
     font-size: var(--text-24);
     line-height: var(--leading-120);
@@ -81,7 +79,7 @@
     font-weight: var(--font-bold);
   }
 
-  .text-preset-1-mobile-regular {
+  @utility text-preset-1-mobile-regular {
     font-family: var(--font-sora);
     font-size: var(--text-32);
     line-height: var(--leading-136);
@@ -90,7 +88,7 @@
   }
 
   /* Text Preset 2 */
-  .text-preset-2 {
+  @utility text-preset-2 {
     font-family: var(--font-sora);
     font-size: var(--text-24);
     line-height: var(--leading-100);
@@ -99,7 +97,7 @@
   }
 
   /* Text Preset 3 */
-  .text-preset-3 {
+  @utility text-preset-3 {
     font-family: var(--font-sora);
     font-size: var(--text-20);
     line-height: var(--leading-120);
@@ -107,7 +105,7 @@
     font-weight: var(--font-regular);
   }
 
-  .text-preset-3-mobile {
+  @utility text-preset-3-mobile {
     font-family: var(--font-sora);
     font-size: var(--text-16);
     line-height: var(--leading-120);
@@ -115,7 +113,7 @@
     letter-spacing: var(--tracking-048n);
   }
 
-  .text-preset-3-semibold {
+  @utility text-preset-3-semibold {
     font-family: var(--font-sora);
     font-size: var(--text-20);
     line-height: var(--leading-120);
@@ -124,7 +122,7 @@
   }
 
   /* Text Preset 4 */
-  .text-preset-4 {
+  @utility text-preset-4 {
     font-family: var(--font-sora);
     font-size: var(--text-18);
     line-height: var(--leading-120);
@@ -133,7 +131,7 @@
   }
 
   /* Text Preset 5 */
-  .text-preset-5 {
+  @utility text-preset-5 {
     font-family: var(--font-sora);
     font-size: var(--text-16);
     line-height: var(--leading-120);
@@ -142,14 +140,14 @@
   }
 
   /* Text Preset 6 */
-  .text-preset-6 {
+  @utility text-preset-6 {
     font-family: var(--font-sora);
     font-size: var(--text-12);
     line-height: var(--leading-120);
     letter-spacing: var(--tracking-0);
     font-weight: var(--font-regular);
   }
-}
+
 
 
 body {
