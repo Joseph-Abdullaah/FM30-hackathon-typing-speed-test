@@ -13,7 +13,7 @@ function Dropdown({ options, selected, onSelect, className = "" }) {
     <div className={`relative ${className}`}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center justify-center gap-2.5 w-full px-4 py-2.5 bg-neutral-900 border border-neutral-700 rounded-xl text-neutral-200"
+        className="flex items-center justify-center gap-2.5 w-[166.5px] px-4 py-2.5 bg-neutral-900 border border-neutral-700 rounded-xl text-neutral-200"
       >
         <span className="capitalize text-preset-5">{selected}</span>
         <img
