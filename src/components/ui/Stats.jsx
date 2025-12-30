@@ -1,9 +1,23 @@
 import React from "react";
+import { useTSTStore } from "../../store/TSTStore.js";
+import { useEffect } from "react";
 import StatItem from "./StatItem.jsx";
 import Difficulty from "./Difficulty.jsx";
 import Mode from "./Mode.jsx";
+
 function Stats() {
+  const { wpm, accuracy, timeRemaining } = useTSTStore();
   const labels = ["WPM", "Accuracy", "Time"];
+  const tick = useTSTStore((state) => state.tick);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      tick();
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [tick]);
+
+
   return (
     <div className="max-w-304 w-full border-b border-neutral-700 pb-4 mx-auto h-fit flex justify-center md:justify-between shrink-0 grow-0 flex-wrap content-between gap-4 md:gap-5">
       <div className="w-full md:w-fit flex justify-evenly md:justify-start gap-5 md:gap-6">
@@ -17,7 +31,7 @@ function Stats() {
             }
             label={label}
             value={
-              label === "WPM" ? "0" : label === "Accuracy" ? "100%" : "60s"
+              label === "WPM" ? wpm : label === "Accuracy" ? `${accuracy}%` : `${timeRemaining}s`
             }
           />
         ))}

@@ -1,24 +1,9 @@
-import React, { useState } from "react";
+// import React, { useState } from "react";
+import { useTSTStore } from "../../store/TSTStore.js";
 import Button from "./Button";
 import Dropdown from "./Dropdown";
-function Difficulty({
-  difficulty: propDifficulty,
-  setDifficulty: propSetDifficulty,
-}) {
-  const [localDifficulty, setLocalDifficulty] = useState("easy");
-
-  // Use prop if available, otherwise fallback to local state
-  const difficulty =
-    propDifficulty !== undefined ? propDifficulty : localDifficulty;
-
-  const setDifficulty = (level) => {
-    if (propSetDifficulty) {
-      propSetDifficulty(level);
-    } else {
-      setLocalDifficulty(level);
-    }
-  };
-
+function Difficulty() {
+  const { difficulty, setDifficulty } = useTSTStore();
   const levels = ["easy", "medium", "hard"];
 
   return (

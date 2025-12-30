@@ -1,54 +1,47 @@
-import React, { useState } from "react";
-import Button from "./Button";
+import React from "react";
 import Dropdown from "./Dropdown";
+import { useTSTStore } from "../../store/TSTStore";
 
-function Mode({ mode: propMode, setMode: propSetMode }) {
-  const [localMode, setLocalMode] = useState("Timed (60s)");
+function Mode() {
+  const { testMode, testDuration, setTestConfig } = useTSTStore();
 
-  // Use prop if available, otherwise fallback to local state
-  const mode = propMode !== undefined ? propMode : localMode;
+  const getCurrentModeLabel = () => {
+    if (testMode === "passage") return "Passage";
+    return `Timed (${testDuration}s)`;
+  };
 
-  const setMode = (value) => {
-    if (propSetMode) {
-      propSetMode(value);
+  const currentModeLabel = getCurrentModeLabel();
+
+  const handleSelect = (value) => {
+    if (value === "Passage") {
+      setTestConfig("passage", 0);
     } else {
-      setLocalMode(value);
+      // Extract number from "Timed (XXs)"
+      const numberPart = value.match(/\d+/);
+      const duration = numberPart ? parseInt(numberPart[0], 10) : 60;
+      setTestConfig("time", duration);
     }
   };
 
-  const modes = ["Timed (60s)", "Passage"];
+  const modes = [
+    "Timed (15s)",
+    "Timed (30s)",
+    "Timed (60s)",
+    "Timed (120s)",
+    "Passage",
+  ];
 
   return (
-    <div className="relative z-50 w-full md:w-auto">
-      {/* Mobile Dropdown */}
-      <div className="md:hidden">
-        <Dropdown
-          options={modes}
-          selected={mode}
-          onSelect={setMode}
-          className="w-[166.5px] md:w-fit"
-        />
-      </div>
-
-      {/* Desktop Buttons */}
-      <div className="hidden md:flex items-center gap-1.5">
-        <span className="text-preset-5 text-neutral-400">Mode: </span>
-        <div className="flex gap-2">
-          {modes.map((m) => (
-            <Button
-              variant="outline"
-              size="sm"
-              key={m}
-              onClick={() => setMode(m)}
-              className={`capitalize ${
-                mode === m ? "!text-blue-400 !border-blue-600" : ""
-              }`}
-            >
-              {m}
-            </Button>
-          ))}
-        </div>
-      </div>
+    <div className="relative z-50 w-full md:w-auto flex items-center gap-3">
+      <span className="hidden md:inline text-preset-5 text-neutral-400">
+        Mode:{" "}
+      </span>
+      <Dropdown
+        options={modes}
+        selected={currentModeLabel}
+        onSelect={handleSelect}
+        className="w-[166.5px] md:w-fit"
+      />
     </div>
   );
 }
