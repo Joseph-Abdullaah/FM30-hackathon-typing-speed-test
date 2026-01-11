@@ -11,15 +11,25 @@ export const useTSTStore = create(
       testMode: "time", // 'time' | 'passage'
       testDuration: 60,
       difficulty: "easy",
-      text: chooseDifficulty("easy").text,
+      category: "general", // 'general' | 'programming' | 'quotes' | 'numbers' | 'custom'
+      customText: "", // For custom category
+      text: chooseDifficulty("general", "easy").text,
       userInput: "",
       wpm: 0,
       accuracy: 0,
 
-      // New Persistent State
+      // User Preferences (Persisted)
       bestWPM: 0,
+      theme: "dark", // 'dark' | 'monkeytype-dark' | 'retro' | 'cyberpunk' | 'forest' | 'ocean'
+      soundEnabled: false,
+      soundSet: "mechanical", // 'mechanical' | 'soft' | 'silent'
+      soundVolume: 50, // 0-100
+      fontSize: "md", // 'sm' | 'md' | 'lg' | 'xl'
+      showHeatmap: true,
+      caretStyle: "block", // 'thin' | 'block' | 'underline' | 'none'
+      testHistory: [], // Array of { wpm, accuracy, mode, duration, date }
 
-      // New Temporary State for Results
+      // Temporary State for Results
       charactersTyped: 0,
       charactersCorrect: 0,
       history: [], // For the chart
@@ -28,10 +38,52 @@ export const useTSTStore = create(
 
       // --- Actions ---
       setDifficulty: (level) => {
-        const { testMode, testDuration } = get();
+        const { testMode, testDuration, category, customText } = get();
         set({
           difficulty: level,
-          text: chooseDifficulty(level).text,
+          text:
+            category === "custom"
+              ? customText
+              : chooseDifficulty(category, level).text,
+          userInput: "",
+          gameState: "idle",
+          timeRemaining: testMode === "time" ? testDuration : 0,
+          wpm: 0,
+          accuracy: 0,
+          charactersTyped: 0,
+          charactersCorrect: 0,
+          history: [],
+          keyStats: {},
+          testResult: null,
+        });
+      },
+
+      setCategory: (newCategory) => {
+        const { difficulty, testMode, testDuration, customText } = get();
+        set({
+          category: newCategory,
+          text:
+            newCategory === "custom"
+              ? customText
+              : chooseDifficulty(newCategory, difficulty).text,
+          userInput: "",
+          gameState: "idle",
+          timeRemaining: testMode === "time" ? testDuration : 0,
+          wpm: 0,
+          accuracy: 0,
+          charactersTyped: 0,
+          charactersCorrect: 0,
+          history: [],
+          keyStats: {},
+          testResult: null,
+        });
+      },
+
+      setCustomText: (text) => {
+        const { testMode, testDuration } = get();
+        set({
+          customText: text,
+          text: text,
           userInput: "",
           gameState: "idle",
           timeRemaining: testMode === "time" ? testDuration : 0,
@@ -46,7 +98,7 @@ export const useTSTStore = create(
       },
 
       setTestConfig: (mode, duration) => {
-        const { difficulty } = get();
+        const { difficulty, category, customText } = get();
         set({
           testMode: mode,
           testDuration: duration,
@@ -60,8 +112,37 @@ export const useTSTStore = create(
           history: [],
           keyStats: {},
           testResult: null,
-          text: chooseDifficulty(difficulty).text,
+          text:
+            category === "custom"
+              ? customText
+              : chooseDifficulty(category, difficulty).text,
         });
+      },
+
+      // --- Settings Actions ---
+      setTheme: (theme) => {
+        set({ theme });
+        document.documentElement.setAttribute("data-theme", theme);
+      },
+
+      setSoundSettings: ({ enabled, set: soundSet, volume }) => {
+        const updates = {};
+        if (enabled !== undefined) updates.soundEnabled = enabled;
+        if (soundSet !== undefined) updates.soundSet = soundSet;
+        if (volume !== undefined) updates.soundVolume = volume;
+        set(updates);
+      },
+
+      setFontSize: (size) => {
+        set({ fontSize: size });
+      },
+
+      toggleHeatmap: () => {
+        set((state) => ({ showHeatmap: !state.showHeatmap }));
+      },
+
+      setCaretStyle: (style) => {
+        set({ caretStyle: style });
       },
 
       prepareTest: () => {
@@ -85,7 +166,8 @@ export const useTSTStore = create(
       },
 
       resetTest: () => {
-        const { difficulty, testMode, testDuration } = get();
+        const { difficulty, testMode, testDuration, category, customText } =
+          get();
         set({
           gameState: "idle",
           timeRemaining: testMode === "time" ? testDuration : 0,
@@ -97,7 +179,10 @@ export const useTSTStore = create(
           history: [],
           keyStats: {},
           testResult: null,
-          text: chooseDifficulty(difficulty).text,
+          text:
+            category === "custom"
+              ? customText
+              : chooseDifficulty(category, difficulty).text,
         });
       },
 
@@ -153,7 +238,7 @@ export const useTSTStore = create(
       },
 
       endTest: () => {
-        const { wpm, bestWPM } = get();
+        const { wpm, accuracy, bestWPM } = get();
         let newBest = bestWPM;
         let resultType = "normal";
 
@@ -167,11 +252,26 @@ export const useTSTStore = create(
           }
         }
 
-        set({
+        const currentResult = {
+          wpm,
+          accuracy,
+          mode: get().testMode,
+          duration: get().testDuration,
+          date: new Date().toISOString(),
+          difficulty: get().difficulty,
+          category: get().category,
+        };
+
+        set((state) => ({
           gameState: "finished",
           bestWPM: newBest,
           testResult: resultType,
-        });
+          testHistory: [currentResult, ...state.testHistory].slice(0, 50), // Keep last 50
+        }));
+      },
+
+      clearHistory: () => {
+        set({ testHistory: [] });
       },
 
       handleInput: (input) => {
@@ -252,7 +352,19 @@ export const useTSTStore = create(
     }),
     {
       name: "typing-speed-storage", // Key in localStorage
-      partialize: (state) => ({ bestWPM: state.bestWPM }), // Only save bestWPM
-    }
-  )
+      partialize: (state) => ({
+        bestWPM: state.bestWPM,
+        theme: state.theme,
+        soundEnabled: state.soundEnabled,
+        soundSet: state.soundSet,
+        soundVolume: state.soundVolume,
+        fontSize: state.fontSize,
+        showHeatmap: state.showHeatmap,
+        caretStyle: state.caretStyle,
+        category: state.category,
+        difficulty: state.difficulty,
+        testHistory: state.testHistory,
+      }),
+    },
+  ),
 );
