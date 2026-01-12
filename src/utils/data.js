@@ -1,16 +1,19 @@
 import data from "../../data.json" with { type: "json" };
 
-function chooseDifficulty(level) {
+function chooseDifficulty(category = "general", level = "easy") {
+    // Handle missing category or level by using defaults
+    const selectedCategory = data[category] || data.general;
+    
     switch(level) 
     {
         case 'easy':
-            return data.easy[Math.floor(Math.random() * data.easy.length)];
+            return selectedCategory.easy[Math.floor(Math.random() * selectedCategory.easy.length)];
         case 'medium':
-            return data.medium[Math.floor(Math.random() * data.medium.length)];
+            return selectedCategory.medium[Math.floor(Math.random() * selectedCategory.medium.length)];
         case 'hard':
-            return data.hard[Math.floor(Math.random() * data.hard.length)];
+            return selectedCategory.hard[Math.floor(Math.random() * selectedCategory.hard.length)];
         default:
-            return data.medium[Math.floor(Math.random() * data.medium.length)];
+            return selectedCategory.medium[Math.floor(Math.random() * selectedCategory.medium.length)];
     }
 }
 
