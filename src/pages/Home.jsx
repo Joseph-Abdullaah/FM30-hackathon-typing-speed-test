@@ -10,7 +10,7 @@ import StartModal from "../components/ui/StartModal";
 import KeyboardHeatmap from "../components/ui/KeyboardHeatmap";
 
 function Home() {
-  const { resetTest, gameState } = useTSTStore();
+  const { resetTest, gameState, showHeatmap } = useTSTStore();
 
   return (
     <>
@@ -24,7 +24,7 @@ function Home() {
             </div>
           )}
         </TypingArea>
-        <KeyboardHeatmap />
+        {showHeatmap && <KeyboardHeatmap />}
         {gameState !== "idle" && (
           <Button
             variant="ghost"
