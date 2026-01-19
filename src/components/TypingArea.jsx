@@ -133,7 +133,7 @@ const TypingArea = ({ className = "", children }) => {
       left: `${caretPos.left}px`,
       height: `${caretPos.height}px`,
       transition: prefersReducedMotion ? "none" : "all 0.1s ease-out",
-      zIndex: 10,
+      zIndex: 5,
     };
 
     switch (caretStyle) {
