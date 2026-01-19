@@ -1,16 +1,19 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
+import { useNavigate, useLocation } from "react-router";
 import { useTSTStore } from "../../store/TSTStore";
 import logoLarge from "/src/assets/images/logo-large.svg";
 import logoSmall from "/src/assets/images/logo-small.svg";
 import personalBestIcon from "/src/assets/images/icon-personal-best.svg";
 import HistoryModal from "../ui/HistoryModal";
 import CommandPalette from "../ui/CommandPalette";
-import { useEffect } from "react";
 
 function Header() {
   const { bestWPM } = useTSTStore();
   const [showHistory, setShowHistory] = useState(false);
   const [showPalette, setShowPalette] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
+  const prevLocationRef = useRef(null);
 
   useEffect(() => {
     const handleShortcut = (e) => {
@@ -23,8 +26,25 @@ function Header() {
     return () => window.removeEventListener("keydown", handleShortcut);
   }, []);
 
+  // Track previous location when not on settings page
+  useEffect(() => {
+    if (location.pathname !== "/settings") {
+      prevLocationRef.current = location.pathname;
+    }
+  }, [location]);
+
   const handleSettingsClick = () => {
-    window.dispatchEvent(new CustomEvent("navigateToSettings"));
+    if (location.pathname === "/settings") {
+      // Go back to previous page
+      if (prevLocationRef.current && prevLocationRef.current !== "/settings") {
+        navigate(prevLocationRef.current);
+      } else {
+        navigate(-1);
+      }
+    } else {
+      // Navigate to settings
+      navigate("/settings");
+    }
   };
 
   return (

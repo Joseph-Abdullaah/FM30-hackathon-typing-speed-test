@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from "react";
+import { useNavigate } from "react-router";
 import confetti from "canvas-confetti";
 import html2canvas from "html2canvas";
 import { useTSTStore } from "../store/TSTStore";
@@ -22,6 +23,7 @@ function Result() {
     testResult,
     resetTest,
   } = useTSTStore();
+  const navigate = useNavigate();
   const resultRef = useRef(null);
 
   let title = "Test Complete!";
@@ -177,7 +179,14 @@ function Result() {
         </div>
 
         <div className="flex flex-col sm:flex-row justify-center gap-4 mt-8 pb-12">
-          <Button variant="secondary" size="lg" onClick={resetTest}>
+          <Button
+            variant="secondary"
+            size="lg"
+            onClick={() => {
+              resetTest();
+              navigate("/");
+            }}
+          >
             {buttonText}{" "}
             <img
               src={RestartIcon}
