@@ -45,10 +45,14 @@ function Result() {
   useEffect(() => {
     if (testResult === "new_pb") {
       confetti({
-        particleCount: 150,
-        spread: 70,
-        origin: { y: 0.6 },
-        colors: ["#e2b714", "#ffffff", "#3295db"],
+        startVelocity: 50,
+        particleCount: 200,
+        spread: 200,
+        shapes: ["circle", "square", "triangle"],
+        origin: { y: 0.5 },
+        scalar: 1.4,
+        decay: 0.90,
+        colors: ["#177DFF", "#4DD67B", "#F4DC73", "#D64D5B"],
       });
     }
   }, [testResult]);
