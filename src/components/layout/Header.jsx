@@ -59,7 +59,7 @@ function Header() {
         <div className="hidden lg:flex flex-1 justify-center max-w-md mx-4">
           <button
             onClick={() => setShowPalette(true)}
-            className="w-full flex items-center justify-between px-4 py-2 bg-neutral-900 border border-neutral-700 rounded-lg text-neutral-400 hover:text-neutral-0 hover:border-neutral-500 transition-all shadow-sm"
+            className="w-full flex items-center justify-between max-[1171px]:justify-center gap-2 px-3 py-2 bg-neutral-900 border border-neutral-700 rounded-lg text-neutral-400 hover:text-neutral-0 hover:border-neutral-500 transition-all shadow-sm"
           >
             <div className="flex items-center gap-2">
               <svg
@@ -76,7 +76,7 @@ function Header() {
                 <circle cx="11" cy="11" r="8" />
                 <path d="m21 21-4.3-4.3" />
               </svg>
-              <span className="text-sm">Search settings...</span>
+              <span className="text-sm max-[1171px]:hidden">Search settings...</span>
             </div>
             <div className="flex gap-1">
               <kbd className="bg-neutral-800 px-1.5 py-0.5 rounded text-[10px] border border-neutral-700">
